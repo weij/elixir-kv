@@ -21,4 +21,12 @@ defmodule KV.Bucket do
     Agent.get(bucket, &HashDict.get(&1, key))
   end
   
+  @doc """
+    First, deletes key from bucket
+    And then, returns the current value of key, if key exists
+  """
+  def delete(bucket, key) do
+    Agent.get_and_update(bucket, &HashDict.pop(&1, key))
+  end
+  
 end

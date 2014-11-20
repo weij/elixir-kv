@@ -13,4 +13,19 @@ defmodule KV.BucketTest do
     KV.Bucket.put(pid, :zhi, 2)
     assert KV.Bucket.get(pid, :zhi) == 2
   end
+
+  test "delete values by key", %{bucket: pid} do
+     KV.Bucket.put(pid, :zhi, 2)
+     assert KV.Bucket.get(pid, :zhi) == 2   
+
+     assert KV.Bucket.delete(pid, :zhi) == 2
+     assert KV.Bucket.get(pid, :zhi) == nil
+  end
+
+  test "delete values by key if the key NOT exists", %{bucket: pid} do
+     KV.Bucket.put(pid, :zhi, 2)
+     assert KV.Bucket.get(pid, :zhi) == 2   
+
+     assert KV.Bucket.delete(pid, :hao) == nil
+  end  
 end
