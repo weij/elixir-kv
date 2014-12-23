@@ -40,9 +40,11 @@ defmodule KV.Registry do
   ## Server Callbacks
 
   def init({table, events, buckets}) do
-    ets = :ets.new(table, [:named_table, read_concurrency: true])
-    refs  = HashDict.new
-    {:ok, %{names: ets, refs: refs, events: events, buckets: buckets}}
+    refs = :ets.foldl(fn {name, pid}, acc ->
+        HashDict.put(acc, Process.monitor(pid), name) end,
+        HashDict.new, table)
+
+    {:ok, %{names: table, refs: refs, events: events, buckets: buckets}}
   end
 
   # def handle_call({:lookup, name}, _from, state) do
